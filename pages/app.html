@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantity Measurement</title>
+    <link rel="icon" type="image/png" href="../images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Auth Protection Script -->
+    <script>
+        // Check if user is logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-brand">
+            <img src="../images/favicon.png" alt="Logo" class="header-logo">
+            <h1>
+                <span class="full-title">Quantity Measurement</span>
+                <span class="short-title">QM App</span>
+            </h1>
+        </div>
+        <nav class="nav" id="authNav">
+            <span class="nav-user" id="userName">User</span>
+            <a href="#" class="nav-link" onclick="logout()">
+                <span class="logout-text">Logout</span>
+                <span class="logout-icon">&#x2192;</span>
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Choose Type Section -->
+        <section class="section">
+            <h2 class="section-title">Choose Type</h2>
+            <div class="type-cards">
+                <div class="type-card" data-type="Length">
+                    <span class="type-icon">📏</span>
+                    <span class="type-label">Length</span>
+                </div>
+                <div class="type-card" data-type="Weight">
+                    <span class="type-icon">⚖️</span>
+                    <span class="type-label">Weight</span>
+                </div>
+                <div class="type-card" data-type="Temperature">
+                    <span class="type-icon">🌡️</span>
+                    <span class="type-label">Temperature</span>
+                </div>
+                <div class="type-card" data-type="Volume">
+                    <span class="type-icon">🧪</span>
+                    <span class="type-label">Volume</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Choose Action Section -->
+        <section class="section">
+            <h2 class="section-title">Choose Action</h2>
+            <div class="action-tabs">
+                <button class="action-tab" data-action="comparison">Comparison</button>
+                <button class="action-tab active" data-action="conversion">Conversion</button>
+                <button class="action-tab" data-action="arithmetic">Arithmetic</button>
+            </div>
+        </section>
+
+        <!-- Input Section - Conversion -->
+        <section class="section input-section" id="conversionSection">
+            <div class="input-row">
+                <div class="input-box">
+                    <label class="input-label">FROM</label>
+                    <input type="number" class="value-input" id="fromValue" placeholder="Enter value" step="any">
+                    <select class="unit-select" id="fromUnit" disabled>
+                        <option value="">Select Unit</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label class="input-label">TO</label>
+                    <input type="number" class="value-input" id="toValue" placeholder="Result" readonly>
+                    <select class="unit-select" id="toUnit" disabled>
+                        <option value="">Select Unit</option>
+                    </select>
+                </div>
+            </div>
+            <button class="convert-btn" id="convertBtn">Convert</button>
+        </section>
+
+        <!-- Input Section - Comparison -->
+        <section class="section input-section hidden" id="comparisonSection">
+            <div class="input-row">
+                <div class="input-box">
+                    <label class="input-label">VALUE 1</label>
+                    <input type="number" class="value-input" id="compareValue1" placeholder="Enter value" step="any">
+                    <select class="unit-select" id="compareUnit1" disabled>
+                        <option value="">Select Unit</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label class="input-label">VALUE 2</label>
+                    <input type="number" class="value-input" id="compareValue2" placeholder="Enter value" step="any">
+                    <select class="unit-select" id="compareUnit2" disabled>
+                        <option value="">Select Unit</option>
+                    </select>
+                </div>
+            </div>
+            <button class="convert-btn" id="compareBtn">Compare</button>
+            <!-- Comparison Result (inline) -->
+            <div class="result-row" id="comparisonResult" style="display: none;">
+                <div class="result-box">
+                    <span class="result-value" id="compareResultText">-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Input Section - Arithmetic -->
+        <section class="section input-section hidden" id="arithmeticSection">
+            <div class="input-row arithmetic-row">
+                <div class="input-box">
+                    <label class="input-label">VALUE 1</label>
+                    <input type="number" class="value-input" id="value1" placeholder="0" step="any">
+                    <select class="unit-select" id="unit1" disabled>
+                        <option value="">Select Unit</option>
+                    </select>
+                </div>
+                <div class="operator-box">
+                    <select class="operator-select" id="operator">
+                        <option value="add">+</option>
+                        <option value="subtract">-</option>
+                        <option value="divide">÷</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label class="input-label">VALUE 2</label>
+                    <input type="number" class="value-input" id="value2" placeholder="0" step="any">
+                    <select class="unit-select" id="unit2" disabled>
+                        <option value="">Select Unit</option>
+                    </select>
+                </div>
+            </div>
+            <button class="convert-btn" id="arithmeticBtn">Calculate</button>
+
+            <!-- Arithmetic Result -->
+            <div class="result-row" id="arithmeticResult">
+                <div class="result-box">
+                    <label class="input-label">RESULT</label>
+                    <span class="result-value" id="resultValue">0</span>
+                    <select class="unit-select" id="resultUnit" disabled>
+                        <option value="">Unit</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
