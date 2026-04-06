@@ -1,0 +1,262 @@
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">
+    <img src="assets/favicon.png" alt="Logo" class="header-logo">
+    <h1>
+      <span class="full-title">Quantity Measurement</span>
+      <span class="short-title">QM App</span>
+    </h1>
+  </div>
+  <nav class="nav">
+    <!-- Logged In User -->
+    <ng-container *ngIf="isLoggedIn">
+      <a routerLink="/history" class="nav-link">History</a>
+      <span class="nav-user">{{ userName }}</span>
+      <button class="nav-link" (click)="logout()">
+        <span class="logout-text">Logout</span>
+        <span class="logout-icon">&#x2192;</span>
+      </button>
+    </ng-container>
+    <!-- Guest User -->
+    <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/login" class="nav-link">Login</a>
+      <a routerLink="/register" class="nav-link nav-link-primary">Sign Up</a>
+    </ng-container>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- Choose Type Section -->
+  <section class="section">
+    <h2 class="section-title">Choose Type</h2>
+    <div class="type-cards">
+      <div
+        class="type-card"
+        [class.active]="selectedType === 'Length'"
+        (click)="selectType('Length')">
+        <span class="type-icon">📏</span>
+        <span class="type-label">Length</span>
+      </div>
+      <div
+        class="type-card"
+        [class.active]="selectedType === 'Weight'"
+        (click)="selectType('Weight')">
+        <span class="type-icon">⚖️</span>
+        <span class="type-label">Weight</span>
+      </div>
+      <div
+        class="type-card"
+        [class.active]="selectedType === 'Temperature'"
+        (click)="selectType('Temperature')">
+        <span class="type-icon">🌡️</span>
+        <span class="type-label">Temperature</span>
+      </div>
+      <div
+        class="type-card"
+        [class.active]="selectedType === 'Volume'"
+        (click)="selectType('Volume')">
+        <span class="type-icon">🧪</span>
+        <span class="type-label">Volume</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Choose Action Section -->
+  <section class="section">
+    <h2 class="section-title">Choose Action</h2>
+    <div class="action-tabs">
+      <button
+        class="action-tab"
+        [class.active]="selectedAction === 'comparison'"
+        (click)="selectAction('comparison')">
+        Comparison
+      </button>
+      <button
+        class="action-tab"
+        [class.active]="selectedAction === 'conversion'"
+        (click)="selectAction('conversion')">
+        Conversion
+      </button>
+      <button
+        class="action-tab"
+        [class.active]="selectedAction === 'arithmetic'"
+        [disabled]="isTemperature"
+        (click)="!isTemperature && selectAction('arithmetic')">
+        Arithmetic
+      </button>
+    </div>
+  </section>
+
+  <!-- Input Section - Conversion -->
+  <section class="section input-section" *ngIf="selectedAction === 'conversion'">
+    <div class="input-row">
+      <div class="input-box">
+        <label class="input-label">FROM</label>
+        <input
+          type="number"
+          class="value-input"
+          [(ngModel)]="conversionValue"
+          placeholder="Enter value"
+          step="any">
+        <select class="unit-select" [(ngModel)]="conversionFromUnit">
+          <option value="">Select Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+      <div class="input-box">
+        <label class="input-label">TO</label>
+        <input
+          type="number"
+          class="value-input"
+          [value]="conversionResultValue"
+          placeholder="Result"
+          readonly>
+        <select class="unit-select" [(ngModel)]="conversionToUnit">
+          <option value="">Select Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+    </div>
+    <button class="convert-btn" (click)="convert()" [disabled]="conversionLoading">
+      {{ conversionLoading ? 'Converting...' : 'Convert' }}
+    </button>
+  </section>
+
+  <!-- Input Section - Comparison -->
+  <section class="section input-section" *ngIf="selectedAction === 'comparison'">
+    <div class="input-row">
+      <div class="input-box">
+        <label class="input-label">VALUE 1</label>
+        <input
+          type="number"
+          class="value-input"
+          [(ngModel)]="comparisonValue1"
+          (input)="onComparisonInputChange()"
+          placeholder="Enter value"
+          step="any">
+        <select class="unit-select" [(ngModel)]="comparisonUnit1" (change)="onComparisonInputChange()">
+          <option value="">Select Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+      <div class="input-box">
+        <label class="input-label">VALUE 2</label>
+        <input
+          type="number"
+          class="value-input"
+          [(ngModel)]="comparisonValue2"
+          (input)="onComparisonInputChange()"
+          placeholder="Enter value"
+          step="any">
+        <select class="unit-select" [(ngModel)]="comparisonUnit2" (change)="onComparisonInputChange()">
+          <option value="">Select Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+    </div>
+    <button class="convert-btn" (click)="performComparison()" [disabled]="comparisonLoading">
+      {{ comparisonLoading ? 'Comparing...' : 'Compare' }}
+    </button>
+    <!-- Comparison Result -->
+    <div class="result-row" *ngIf="comparisonResult">
+      <div class="result-box">
+        <span class="result-value" [class.equal]="comparisonResultClass === 'equal'" [class.not-equal]="comparisonResultClass === 'not-equal'">
+          {{ comparisonResult }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Input Section - Arithmetic -->
+  <section class="section input-section" *ngIf="selectedAction === 'arithmetic'">
+    <div class="input-row arithmetic-row">
+      <div class="input-box">
+        <label class="input-label">VALUE 1</label>
+        <input
+          type="number"
+          class="value-input"
+          [(ngModel)]="arithmeticValue1"
+          placeholder="0"
+          step="any">
+        <select class="unit-select" [(ngModel)]="arithmeticUnit1">
+          <option value="">Select Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+      <div class="operator-box">
+        <select class="operator-select" [(ngModel)]="arithmeticOperation">
+          <option value="add">+</option>
+          <option value="subtract">-</option>
+          <option value="divide">÷</option>
+        </select>
+      </div>
+      <div class="input-box">
+        <label class="input-label">VALUE 2</label>
+        <input
+          type="number"
+          class="value-input"
+          [(ngModel)]="arithmeticValue2"
+          placeholder="0"
+          step="any">
+        <select class="unit-select" [(ngModel)]="arithmeticUnit2">
+          <option value="">Select Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+    </div>
+    <button class="convert-btn" (click)="performArithmetic()" [disabled]="arithmeticLoading">
+      {{ arithmeticLoading ? 'Calculating...' : 'Calculate' }}
+    </button>
+
+    <!-- Arithmetic Result -->
+    <div class="result-row">
+      <div class="result-box">
+        <label class="input-label">RESULT</label>
+        <span class="result-value">{{ arithmeticResultValue || '0' }}</span>
+        <select
+          class="unit-select"
+          [(ngModel)]="arithmeticTargetUnit"
+          [disabled]="arithmeticOperation === 'divide'"
+          (change)="onArithmeticResultUnitChange()">
+          <option value="" *ngIf="arithmeticOperation === 'divide'">Unit</option>
+          <option *ngFor="let unit of units" [value]="unit">{{ formatUnit(unit) }}</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- History Preview Section (Logged In Users Only) -->
+  <section class="section history-preview" *ngIf="isLoggedIn && recentHistory.length > 0">
+    <div class="history-preview-header">
+      <h2 class="section-title">Recent History</h2>
+      <a routerLink="/history" class="view-all-link">View All →</a>
+    </div>
+    <div class="history-preview-list">
+      <div class="history-preview-item" *ngFor="let item of recentHistory">
+        <div class="preview-icon">{{ getActionIcon(item.type) }}</div>
+        <div class="preview-content">
+          <span class="preview-type">{{ item.type | titlecase }}</span>
+          <span class="preview-result">{{ item.result }}</span>
+        </div>
+        <span class="preview-time">{{ formatDate(item.timestamp) }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Login Prompt for Guest Users -->
+  <section class="section login-prompt" *ngIf="!isLoggedIn">
+    <div class="prompt-card">
+      <span class="prompt-icon">📊</span>
+      <h3>Want to keep your history?</h3>
+      <p>Login or create an account to save your calculation history and access it anytime.</p>
+      <div class="prompt-buttons">
+        <a routerLink="/login" class="prompt-btn prompt-btn-secondary">Login</a>
+        <a routerLink="/register" class="prompt-btn prompt-btn-primary">Sign Up Free</a>
+      </div>
+    </div>
+  </section>
+</main>

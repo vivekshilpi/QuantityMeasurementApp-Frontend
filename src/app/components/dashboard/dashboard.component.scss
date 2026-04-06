@@ -1,0 +1,229 @@
+// Additional styles for dashboard component
+// Most styles come from global styles.scss
+
+.result-value {
+  &.equal {
+    color: var(--success-text) !important;
+    background: var(--success-bg);
+  }
+
+  &.not-equal {
+    color: var(--warning-text) !important;
+    background: var(--warning-bg);
+  }
+}
+
+// Hide title spans based on screen size
+.full-title {
+  display: inline;
+}
+.short-title {
+  display: none;
+}
+
+.logout-text {
+  display: inline;
+}
+.logout-icon {
+  display: none;
+}
+
+// Nav link primary style
+.nav-link-primary {
+  background: rgba(202, 168, 106, 0.18) !important;
+  border-color: rgba(202, 168, 106, 0.42) !important;
+}
+
+// History Preview Section
+.history-preview {
+  margin-top: 40px;
+}
+
+.history-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.view-all-link {
+  color: var(--brand-accent-strong);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--brand-end);
+  }
+}
+
+.history-preview-list {
+  background: rgba(255, 253, 249, 0.96);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(221, 210, 193, 0.9);
+  box-shadow: 0 16px 32px rgba(15, 28, 46, 0.08);
+}
+
+.history-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-soft);
+  transition: background 0.3s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(202, 168, 106, 0.08);
+  }
+}
+
+.preview-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(202, 168, 106, 0.18) 0%, rgba(15, 28, 46, 0.08) 100%);
+  border-radius: 10px;
+}
+
+.preview-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preview-type {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.preview-result {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.preview-time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+// Login Prompt Section
+.login-prompt {
+  margin-top: 40px;
+}
+
+.prompt-card {
+  background: linear-gradient(135deg, rgba(202, 168, 106, 0.14) 0%, rgba(15, 28, 46, 0.05) 100%);
+  border: 1px dashed var(--brand-accent-strong);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+}
+
+.prompt-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.prompt-card h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.prompt-card p {
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.prompt-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.prompt-btn {
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.prompt-btn-primary {
+  background: linear-gradient(135deg, var(--brand-start) 0%, var(--brand-end) 76%, #42526a 100%);
+  color: #fff;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(15, 28, 46, 0.22);
+  }
+}
+
+.prompt-btn-secondary {
+  background: rgba(255, 253, 249, 0.96);
+  color: var(--brand-end);
+  border: 1px solid var(--border-strong);
+
+  &:hover {
+    background: rgba(202, 168, 106, 0.1);
+  }
+}
+
+@media (max-width: 768px) {
+  .full-title {
+    display: none;
+  }
+  .short-title {
+    display: inline;
+  }
+  .logout-text {
+    display: none;
+  }
+  .logout-icon {
+    display: inline;
+  }
+
+  .history-preview-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .history-preview-item {
+    flex-wrap: wrap;
+  }
+
+  .preview-time {
+    width: 100%;
+    text-align: right;
+    margin-top: 5px;
+  }
+
+  .prompt-card {
+    padding: 30px 20px;
+  }
+
+  .prompt-buttons {
+    flex-direction: column;
+  }
+
+  .prompt-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

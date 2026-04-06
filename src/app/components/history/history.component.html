@@ -1,0 +1,66 @@
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">
+    <img src="assets/favicon.png" alt="Logo" class="header-logo">
+    <h1>Quantity Measurement</h1>
+  </div>
+  <nav class="nav">
+    <a routerLink="/" class="nav-link">Calculator</a>
+    <span class="nav-user">{{ userName }}</span>
+    <button class="nav-link" (click)="logout()">Logout</button>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+  <section class="section">
+    <div class="history-header">
+      <h2 class="section-title">Operation History</h2>
+      <button class="clear-btn" (click)="clearAll()" *ngIf="history.length > 0">
+        Clear All
+      </button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="history.length === 0">
+      <span class="empty-icon">📋</span>
+      <h3>No History Yet</h3>
+      <p>Your calculation history will appear here after you perform operations while logged in.</p>
+      <a routerLink="/" class="back-btn">Go to Calculator</a>
+    </div>
+
+    <!-- History List -->
+    <div class="history-list" *ngIf="history.length > 0">
+      <div class="history-item" *ngFor="let item of history">
+        <div class="history-item-header">
+          <div class="history-icons">
+            <span class="action-icon">{{ getActionIcon(item.type) }}</span>
+            <span class="type-icon">{{ getTypeIcon(item.measurementType) }}</span>
+          </div>
+          <span class="history-type">{{ item.type | titlecase }} - {{ item.measurementType }}</span>
+          <span class="history-time">{{ formatDate(item.timestamp) }}</span>
+          <button class="delete-btn" (click)="deleteItem(item.id)" title="Delete">✕</button>
+        </div>
+        <div class="history-item-body">
+          <div class="history-input">
+            <span class="value">{{ item.input1.value }}</span>
+            <span class="unit">{{ formatUnit(item.input1.unit) }}</span>
+            <span class="operator" *ngIf="item.input2">
+              {{ item.type === 'comparison' ? 'vs' : (item.operation === 'add' ? '+' : item.operation === 'subtract' ? '-' : item.operation === 'divide' ? '÷' : '→') }}
+            </span>
+            <span class="value" *ngIf="item.input2">{{ item.input2.value }}</span>
+            <span class="unit" *ngIf="item.input2">{{ formatUnit(item.input2.unit) }}</span>
+          </div>
+          <div class="history-result">
+            <span class="result-label">Result:</span>
+            <span class="result-value"
+                  [class.equal]="item.result.includes('EQUAL') && !item.result.includes('NOT')"
+                  [class.not-equal]="item.result.includes('GREATER') || item.result.includes('LESS') || item.result.includes('NOT EQUAL')">
+              {{ item.result }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

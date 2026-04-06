@@ -1,0 +1,110 @@
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">
+    <img src="assets/favicon.png" alt="Logo" class="header-logo">
+    <h1>Quantity Measurement</h1>
+  </div>
+</header>
+
+<!-- Register Section -->
+<main class="auth-page">
+  <div class="auth-wrapper">
+    <!-- Left Side - Logo Branding (Desktop) -->
+    <div class="auth-branding">
+      <div class="branding-content logo-centered">
+        <img src="assets/logo-white.png" alt="Quantity Measurement Logo" class="auth-logo">
+        <h2 class="app-name">Quantity Measurement</h2>
+      </div>
+    </div>
+
+    <!-- Right Side - Form -->
+    <div class="auth-form-container">
+      <div class="auth-form-header">
+        <h2>Create Account</h2>
+      </div>
+
+      <!-- Messages -->
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <form class="auth-form" (ngSubmit)="onSubmit()">
+        <div class="form-row-inline">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              [(ngModel)]="fullName"
+              name="fullName"
+              placeholder="Your name"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="you@example.com"
+              required>
+          </div>
+        </div>
+
+        <div class="form-row-inline">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              [(ngModel)]="password"
+              name="password"
+              (input)="onPasswordChange()"
+              placeholder="Create password"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm password"
+              required>
+          </div>
+        </div>
+
+        <div class="password-requirements">
+          <span class="requirement" [class.valid]="passwordValidation.minLength">
+            <span class="req-icon">{{ passwordValidation.minLength ? '✓' : '○' }}</span> 8+ chars
+          </span>
+          <span class="requirement" [class.valid]="passwordValidation.hasUppercase">
+            <span class="req-icon">{{ passwordValidation.hasUppercase ? '✓' : '○' }}</span> Uppercase
+          </span>
+          <span class="requirement" [class.valid]="passwordValidation.hasNumber">
+            <span class="req-icon">{{ passwordValidation.hasNumber ? '✓' : '○' }}</span> Number
+          </span>
+          <span class="requirement" [class.valid]="passwordValidation.hasSpecial">
+            <span class="req-icon">{{ passwordValidation.hasSpecial ? '✓' : '○' }}</span> Special
+          </span>
+        </div>
+
+        <button type="submit" class="btn-auth" [disabled]="isLoading">
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="auth-divider"><span>or</span></div>
+
+      <!-- Google Signup Button -->
+      <div #googleBtn class="google-btn-container" id="googleButtonContainer"></div>
+
+      <a routerLink="/" class="guest-link-btn">Continue as Guest</a>
+
+      <div class="auth-footer">
+        Already have an account? <a routerLink="/login">Login</a>
+      </div>
+    </div>
+  </div>
+</main>
