@@ -1,222 +1,226 @@
+# Quantity Measurement App - Frontend
 
-# Quantity Measurement Frontend
-
-A modern, responsive web application for unit conversion and comparison with Google OAuth authentication.
+Angular frontend for a Quantity Measurement application. The app lets users convert, compare, and calculate quantities across length, weight, volume, and temperature units. It also supports email/password authentication, Google Sign-In, JWT-based API calls, and saved calculation history for logged-in users.
 
 ## Features
 
-- **Unit Conversion**: Convert between various units of measurement
-  - Length (Inch, Foot, Yard, Centimeter)
-  - Weight (Gram, Kilogram, Milligram, Pound, Tonne)
-  - Volume (Litre, Millilitre, Gallon)
-  - Temperature (Celsius, Fahrenheit, Kelvin)
+- Convert quantities between supported units.
+- Compare two quantities and show whether they are equal, greater, or less.
+- Perform arithmetic operations on compatible units.
+- Register and log in with email/password.
+- Continue as a guest without saving history.
+- Sign in with Google Identity Services.
+- Store JWT and user details in `localStorage`.
+- Attach JWT tokens to authenticated API requests through an Angular HTTP interceptor.
+- Save the latest 50 logged-in calculations in browser storage.
+- View, delete, and clear calculation history.
 
-- **Unit Comparison**: Compare two values in different units with live results
-- **Arithmetic Operations**: Perform addition, subtraction, and division on quantities
-- **Authentication**:
-  - Email/Password registration and login
-  - Google Sign-In integration
-  - JWT-based secure authentication
+## Supported Measurements
+
+| Measurement | Units |
+| --- | --- |
+| Length | `INCH`, `FOOT`, `YARD`, `CENTIMETER` |
+| Weight | `GRAM`, `KILOGRAM`, `MILLIGRAM`, `POUND`, `TONNE` |
+| Volume | `LITRE`, `MILLILITRE`, `GALLON` |
+| Temperature | `CELSIUS`, `FAHRENHEIT`, `KELVIN` |
+
+Temperature supports conversion and comparison. Arithmetic is disabled for temperature.
 
 ## Tech Stack
 
-- **Frontend**: Vanilla JavaScript, HTML5, CSS3
-- **Authentication**: Google Identity Services (GIS)
-- **Backend API**: Spring Boot REST API (separate repository)
-- **Styling**: Custom CSS with responsive design
+- Angular 18
+- TypeScript
+- Angular standalone components
+- Angular Router
+- Angular Forms
+- Angular HttpClient
+- RxJS
+- SCSS
+- Google Identity Services
 
 ## Project Structure
 
-```
-quantity-measurement-frontend/
-├── pages/
-│   ├── index.html         # Registration/Sign-up page (entry point)
-│   ├── login.html         # Login page
-│   └── app.html           # Main application page
-├── css/
-│   └── styles.css         # All application styles
-├── js/
-│   └── script.js          # Main application logic
-├── images/
-│   ├── favicon.png        # App icon
-│   └── logo-white.png     # White logo for gradient backgrounds
-├── README.md
-└── .gitignore
+```text
+.
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── dashboard/      # Calculator UI and quantity workflows
+│   │   │   ├── history/        # Saved calculation history
+│   │   │   ├── login/          # Email/password and Google login
+│   │   │   └── register/       # Registration and password validation
+│   │   ├── guards/             # Route guards for authenticated pages
+│   │   ├── interceptors/       # JWT authorization interceptor
+│   │   ├── models/             # Auth, quantity, unit, and history models
+│   │   ├── services/           # Auth, quantity API, and history services
+│   │   ├── app.config.ts       # App providers
+│   │   └── app.routes.ts       # Route definitions
+│   ├── assets/                 # App images and favicon
+│   ├── environments/           # API URL and Google client configuration
+│   ├── index.html              # Angular host page
+│   ├── main.ts                 # Application bootstrap
+│   └── styles.scss             # Global styles
+├── pages/                      # Legacy/static HTML screens
+├── css/                        # Legacy/static styles
+├── js/                         # Legacy/static JavaScript
+├── angular.json
+├── package.json
+└── tsconfig.json
 ```
 
 ## Prerequisites
 
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Backend API running on `http://localhost:8080`
-- Google Cloud Console project with OAuth 2.0 credentials (for Google Sign-In)
+- Node.js and npm
+- Angular CLI, or use the local CLI through `npm run`
+- Quantity Measurement backend running on `http://localhost:8080`
+- Google OAuth client ID if Google Sign-In is used
 
-## Setup Instructions
+## Getting Started
 
-### 1. Clone the Repository
-
-```bash
-git clone <repository-url>
-cd quantity-measurement-frontend
-```
-
-### 2. Backend Setup
-
-Ensure the Spring Boot backend is running on `http://localhost:8080`.
-
-Backend repository: [Link to backend repo]
-
-### 3. Google OAuth Configuration
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable Google Identity Services
-4. Create OAuth 2.0 credentials:
-   - Application type: Web application
-   - Authorized JavaScript origins:
-     - `http://localhost:5500`
-     - `http://127.0.0.1:5500`
-   - Authorized redirect URIs: (if needed)
-     - `http://localhost:5500`
-5. Copy the Client ID and update it in:
-   - `index.html` (line ~109)
-   - `pages/login.html` (line ~96)
-
-### 4. Run the Application
-
-#### Option 1: Using VS Code Live Server
-
-1. Install the [Live Server extension](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
-2. Right-click on `index.html`
-3. Select "Open with Live Server"
-4. Application will open at `http://127.0.0.1:5500`
-
-#### Option 2: Using Python HTTP Server
+Install dependencies:
 
 ```bash
-# Python 3
-python3 -m http.server 5500
-
-# Python 2
-python -m SimpleHTTPServer 5500
+npm install
 ```
 
-Then open `http://localhost:5500` in your browser.
-
-#### Option 3: Using Node.js http-server
+Start the development server:
 
 ```bash
-npm install -g http-server
-http-server -p 5500
+npm start
 ```
 
-Then open `http://localhost:5500` in your browser.
+Open the app:
 
-## Usage
-
-### Registration
-
-1. Navigate to `index.html` (homepage)
-2. Fill in your details (Full Name, Email, Password)
-3. Password requirements:
-   - Minimum 8 characters
-   - At least one uppercase letter
-   - At least one number
-   - At least one special character
-4. Click "Create Account" or use "Continue with Google"
-
-### Login
-
-1. Click "Login" link from registration page
-2. Enter your email and password OR
-3. Click Google Sign-In button
-
-### Unit Operations
-
-1. **Select Type**: Choose Length, Weight, Temperature, or Volume
-2. **Select Action**:
-   - **Conversion**: Convert from one unit to another
-   - **Comparison**: Compare two values (live results)
-   - **Arithmetic**: Add, subtract, or divide quantities
-
-#### Conversion Example
-- Type: Length
-- Action: Conversion
-- FROM: 12 Inch
-- TO: Foot
-- Result: 1
-
-#### Comparison Example
-- Type: Length
-- Action: Comparison
-- VALUE 1: 13 Inch
-- VALUE 2: 1 Foot
-- Result: "13 Inch is GREATER than 1 Foot" (updates live as you type)
-
-#### Arithmetic Example
-- Type: Weight
-- Action: Arithmetic
-- VALUE 1: 500 Gram
-- Operator: +
-- VALUE 2: 1 Kilogram
-- Result: 1500 Gram
-
-## API Integration
-
-The frontend communicates with the backend REST API:
-
-### Authentication Endpoints
-
-- `POST /api/v1/auth/register` - Register new user
-- `POST /api/v1/auth/login` - Email/password login
-- `POST /api/v1/auth/google-login` - Google OAuth login
-- `GET /api/v1/auth/me` - Get current user
-- `GET /api/v1/auth/status` - API health check
-
-### Quantity Measurement Endpoints
-
-- `POST /api/v1/quantities/convert` - Convert units
-- `POST /api/v1/quantities/compare` - Compare quantities
-- `POST /api/v1/quantities/add` - Add quantities
-- `POST /api/v1/quantities/subtract` - Subtract quantities
-- `POST /api/v1/quantities/divide` - Divide quantities
-
-All protected endpoints require JWT token in Authorization header:
+```text
+http://localhost:4200
 ```
+
+Build the app:
+
+```bash
+npm run build
+```
+
+Create a development build in watch mode:
+
+```bash
+npm run watch
+```
+
+## Configuration
+
+Environment settings are defined in:
+
+- `src/environments/environment.ts`
+- `src/environments/environment.prod.ts`
+
+Current defaults:
+
+```ts
+apiUrl: 'http://localhost:8080'
+googleClientId: '<google-client-id>'
+```
+
+Update `apiUrl` if the backend runs on a different host or port. Update `googleClientId` with the OAuth client ID configured in Google Cloud Console.
+
+## Routes
+
+| Route | Component | Access |
+| --- | --- | --- |
+| `/` | Dashboard | Public |
+| `/login` | Login | Public |
+| `/register` | Register | Public |
+| `/history` | History | Authenticated only |
+
+Unknown routes redirect to `/`.
+
+## Backend API
+
+The frontend expects a REST API under `http://localhost:8080`.
+
+### Authentication
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/auth/register` | Create a new account |
+| `POST` | `/api/v1/auth/login` | Log in with email/password |
+| `POST` | `/api/v1/auth/google-login` | Log in with Google credential token |
+| `GET` | `/api/v1/auth/me` | Fetch current user |
+| `GET` | `/api/v1/auth/status` | Check API availability |
+
+### Quantity Operations
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/quantities/convert` | Convert one quantity to another unit |
+| `POST` | `/api/v1/quantities/compare` | Compare two quantities |
+| `POST` | `/api/v1/quantities/add` | Add quantities |
+| `POST` | `/api/v1/quantities/subtract` | Subtract quantities |
+| `POST` | `/api/v1/quantities/divide` | Divide quantities |
+
+Authenticated requests include:
+
+```http
 Authorization: Bearer <jwt-token>
 ```
 
-## Responsive Design
+Quantity requests are sent in this shape:
 
-The application is fully responsive with breakpoints at:
-- Desktop: > 768px
-- Tablet: 481px - 768px
-- Mobile: ≤ 480px
+```json
+{
+  "thisQuantityDTO": {
+    "value": 12,
+    "unit": "INCH",
+    "measurementType": "LengthUnit"
+  },
+  "thatQuantityDTO": {
+    "value": 0,
+    "unit": "FOOT",
+    "measurementType": "LengthUnit"
+  }
+}
+```
 
-### Mobile Optimizations
-- Compact type selection cards (4-column grid)
-- Shortened header title ("QM App")
-- Icon-only logout button
-- Hidden user greeting
-- Stacked form layouts
-- Touch-friendly button sizes
+## Usage
 
-## Browser Support
+### Convert Units
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+1. Select a measurement type.
+2. Select `Conversion`.
+3. Enter a value and source unit.
+4. Select the target unit.
+5. Click `Convert`.
 
-## Security Features
+Example: `12 INCH` converts to `1 FOOT`.
 
-- JWT-based authentication
-- Password strength validation
-- Google OAuth 2.0 integration
-- CORS-enabled API communication
-- Secure token storage (localStorage)
+### Compare Units
 
-## Known Limitations
+1. Select a measurement type.
+2. Select `Comparison`.
+3. Enter both quantities.
+4. Click `Compare`, or update inputs to trigger debounced comparison.
 
-- Temperature arithmetic operations not supported (by design)
-- Multiply operation not available (backend limitation)
-- Local storage used for token (consider httpOnly cookies for production)
+Example: `13 INCH` is greater than `1 FOOT`.
+
+### Arithmetic
+
+1. Select length, weight, or volume.
+2. Select `Arithmetic`.
+3. Enter two quantities.
+4. Choose add, subtract, or divide.
+5. Click `Calculate`.
+6. Optionally change the result unit for add/subtract results.
+
+## Authentication and History
+
+- Guests can use the calculator without logging in.
+- Logged-in users can access `/history`.
+- Calculation history is stored in browser `localStorage` under `quantity_history`.
+- The history service keeps the most recent 50 operations.
+- Logging out removes `token` and `currentUser` from `localStorage`.
+
+## Notes
+
+- The Angular app under `src/` is the primary implementation.
+- The `pages/`, `css/`, and `js/` folders contain legacy/static screens from an earlier implementation.
+- No test script is currently defined in `package.json`.
